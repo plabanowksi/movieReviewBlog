@@ -25,17 +25,18 @@
     
     <div class="md:grid lg:grid-cols-3 gap-20 w-4/5 mx-auto py-15 ">
         <!-- Review Item -->
-        {% for movie in movies %}
+        {% for movie in pagination %}
             <div class="text-center pt-8 pb-4">
+                <h2 class="text-gray-700 font-bold text-3xl py-2">
+                    {{ movie.title }}
+                </h2>
+                
                 <img
                     src="{{ movie.imagePath }}"
                     alt=""
                     class="shadow-xl rounded-md"
                 />
 
-                <h2 class="text-gray-700 font-bold text-3xl py-2">
-                    {{ movie.title }}
-                </h2>
 
                 <p class="text-base text-gray-700 pt-4 pb-10 leading-8 font-light">
                     {{ movie.description }}
@@ -46,5 +47,11 @@
                 </a>
             </div>
         {% endfor %}
+
     </div>
+    <div class="w-4/5 mt-4 m-auto text-center pagination" >
+        {{ knp_pagination_render(pagination,
+         '@KnpPaginator/Pagination/twitter_bootstrap_v4_pagination.html.twig',) }}
+    </div>
+
 {% endblock %}

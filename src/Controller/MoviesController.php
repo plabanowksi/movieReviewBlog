@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Knp\Component\Pager\PaginatorInterface;
 
 class MoviesController extends AbstractController
 {
@@ -22,18 +23,26 @@ class MoviesController extends AbstractController
         $this->movieRepository = $movieRepository;
     }
     #[Route('/', name: '')]
-    public function home()
+    public function home(Request $request, PaginatorInterface $paginator)
     {
-        return $this->index();
+        return $this->index($request, $paginator);
     }
 
     #[Route('/movies', name: 'movies')]
-    public function index(): Response
+    public function index(Request $request, PaginatorInterface $paginator): Response
     {
         $movies = $this->movieRepository->findAll();
 
+        $pagination = $paginator->paginate(
+            $movies,
+            $request->query->getInt('page', 1),
+            3
+        );
+
         return $this->render('movies/index.html.twig', [
-            'movies' => $movies
+            'movies' => $movies,
+            'pagination' => $pagination,
+
         ]);
     }
 
