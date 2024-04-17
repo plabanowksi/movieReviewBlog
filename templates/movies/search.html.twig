@@ -11,20 +11,14 @@
 
         </div>
         <div class="d-flex">
-            <div class="mx-auto w-4/5 my-8">
-        {% if app.user %}
-                <a 
-                    href="/movie/create" 
-                    class="uppercase border border-gray-500 text-lg py-4 px-6 rounded transition transition-all bg-gray-800 text-white hover:bg-white hover:text-gray-800">
-                    Create New movie
-                </a>
-                
-        {% endif %}
-                <a 
-                    href="/movies/search" 
-                    class="uppercase border border-gray-500 text-lg py-4 px-6 rounded transition transition-all bg-gray-800 text-white hover:bg-white hover:text-gray-800">
-                    Find movie
-                </a>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <form class="d-flex">
+                        <input class="form-control me-2 py-4 px-6 border-gray-500 " type="search" placeholder="Search" aria-label="Search" id="searchInput">
+                        <button class="uppercase border border-gray-500 text-lg py-1 px-2 rounded transition transition-all bg-gray-800 text-white hover:bg-white hover:text-gray-800" type="button" id="searchButton">Search</button>
+                        <button class="uppercase border border-gray-500 text-lg py-1 px-2 rounded transition transition-all bg-gray-800 text-white hover:bg-white hover:text-gray-800" type="button" id="clearButton">Clear</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -33,7 +27,7 @@
     
     <div class="md:grid lg:grid-cols-3 gap-20 w-4/5 mx-auto py-15" id="resultsList">
         <!-- Review Item -->
-        {% for movie in pagination %}
+        {% for movie in movies %}
             <div class="text-center pt-8 pb-4">
                 <h2 class="text-gray-700 font-bold text-3xl py-2">
                     {{ movie.title }}
@@ -57,9 +51,10 @@
         {% endfor %}
 
     </div>
-    <div class="w-4/5 mt-4 m-auto text-center pagination" >
-        {{ knp_pagination_render(pagination,
-         '@KnpPaginator/Pagination/twitter_bootstrap_v4_pagination.html.twig',) }}
-    </div>
+
+
+    {% block javascript %}
+        <script src="{{ asset("javascript/searchbar.js") }}"></script>
+    {% endblock %}
 
 {% endblock %}

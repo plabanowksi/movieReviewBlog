@@ -46,6 +46,17 @@ class MoviesController extends AbstractController
         ]);
     }
 
+    #[Route('/movies/search', name: 'movies_search')]
+    public function search(): Response
+    {
+        $movies = $this->movieRepository->findAll();
+
+
+        return $this->render('movies/search.html.twig', [
+            'movies' => $movies
+
+        ]);
+    }
     #[Route('/movies/{id}', methods: ['GET'], name: 'show_movie')]
     public function show($id): Response
     {
@@ -139,5 +150,15 @@ class MoviesController extends AbstractController
         $this->em->flush();
 
         return $this->redirectToRoute('movies');
+    }
+
+    #[Route('/movie/{id}/comment', methods: ['GET','POST'], name: 'add_comment')]
+    public function addComment($id): Response
+    {
+        $movie = $this->movieRepository->find($id);
+        
+        return $this->render('movies/addcomment.html.twig', [
+            'movie' => $movie
+        ]);
     }
 }

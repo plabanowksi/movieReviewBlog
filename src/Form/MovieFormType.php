@@ -49,8 +49,7 @@ class MovieFormType extends AbstractType
                     'class' => 'py-10',
                     'placeholder' => ''
                 ),
-                'label' => false,
-                'required' => false
+                'label' => false
             ])
 //             ->add('actors', EntityType::class, [
 //                 'class' => Actor::class,
