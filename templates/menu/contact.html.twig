@@ -11,20 +11,17 @@
 
     <div class="w-4/5 m-auto" style="min-height: 54%">
 
-        <form action="contact/email" method="post" class="needs-validation" novalidate> 
-            {# {{ path('handle_contact_form') }} #}
+    {{ form_start(contactForm) }}
             <div class="form-group row">
                 <label for="email" class="bg-transparent block w-full h-20 text-6xl form-control-label">Email</label>
-                <input type="email" class="block w-full h-20 text-3xl form-control" id="email" name="email" placeholder="Enter your email here..." required >
+                {{ form_row(contactForm.email) }}
             </div>
-
             <div class="form-group row">
                 <label for="message" class="bg-transparent block w-full h-20 text-6xl form-control-label">Message</label>
-                <textarea class="block w-full text-3xl form-control" name="message" rows="5" placeholder="Enter your text here..."></textarea>
-                
+                {{ form_row(contactForm.content) }}
             </div>
             <button type="submit" class="uppercase border border-gray-500 text-lg py-4 px-6 rounded transition transition-all bg-gray-800 text-white hover:bg-white hover:text-gray-800">Submit</button>
-        </form>
+    {{ form_end(contactForm) }}
 
     </div>
 

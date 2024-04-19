@@ -49,28 +49,31 @@
     <div class="col mt-2">
         <h3><i class="pr-3 fas fa-comment"></i>{{ movie.comments|length }} Comments</h3>
         <hr>
-        <div class="row mb-5">
-            <div class="col mt-6">
-                <div class="rounded">
-                    <div class="shadow p-3 w-50">
-                        <div class="comment-container d-inline-block pl-3 align-top">
-                            <img class="comment-img rounded-circle icon-img-size" src="{{ asset('images/usericon.png') }}" alt="User Icon">
-                            <span class="commenter-name">{{app.user.email}}</span>
-                            {{ form_start(commentForm) }}
+        {% if app.user %}
+            <div class="row mb-5">
+                <div class="col mt-6">
+                    <div class="rounded">
+                        <div class="shadow p-3 w-50">
+                            <div class="comment-container d-inline-block pl-3 align-top">
+                                <img class="comment-img rounded-circle icon-img-size" src="{{ asset('images/usericon.png') }}" alt="User Icon">
+                                <span class="commenter-name">{{app.user.email}}</span>
+                                {{ form_start(commentForm) }}
 
-                                <div class="form-floating mt-2">
-                                    <input type="hidden" name="comment_form[author]" value="{{ app.user.email }}">
-                                    <input type="hidden" name="comment_form[createdAt]" value="{{ 'now'|date('Y-m-d H:i:s') }}">
+                                    <div class="form-floating mt-2">
+                                        <input type="hidden" name="comment_form[author]" value="{{ app.user.email }}">
+                                        <input type="hidden" name="comment_form[createdAt]" value="{{ 'now'|date('Y-m-d H:i:s') }}">
 
-                                    {{ form_row(commentForm.content) }}
-                                </div>
-                                <button type="submit" class="btn btn-info mt-2">Comment</button>
-                            {{ form_end(commentForm) }}
+                                        {{ form_row(commentForm.content) }}
+                                    </div>
+                                    <button type="submit" class="btn btn-info mt-2">Comment</button>
+                                {{ form_end(commentForm) }}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
+
 
         {% for comment in movie.comments %}
         <div class="row mb-3">
@@ -87,7 +90,9 @@
                                     <small class="text-muted">about {{ comment.createdAt|ago }}</small>
                                     <br>
                                     <span class="comment mt-2">{{ comment.content }}</span>
-                                    <p><a href="#" class="btn btn-info mt-2">Reply</a></p>
+                                    {% if app.user %}
+                                        <p><a href="#" class="btn btn-info mt-2">Reply</a></p>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

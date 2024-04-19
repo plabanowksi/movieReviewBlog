@@ -70,11 +70,11 @@ class MoviesController extends AbstractController
         $comment = new Comments();
 
         $user = $this->getUser();
-        $userInfo = $this->userRepository->find($user->getId());
-        
-
-        $comment->setAuthor($userInfo->getEmail());
-        $comment->setCreatedAt(new DateTime());
+        if ($user) {
+            $userInfo = $this->userRepository->find($user->getId());
+            $comment->setAuthor($userInfo->getEmail());
+            $comment->setCreatedAt(new DateTime());
+        }
 
         $commentForm = $this->createForm(CommentFormType::class, $comment);
         $commentForm->handleRequest($request);
