@@ -38,3 +38,12 @@ footer {
     max-width: 50%;
     max-height: 50%;
 }
+
+.icon-img-size {
+    width: 50px; 
+    height: 50px;
+}
+
+textarea .comment-form{
+    resize: none;
+ }

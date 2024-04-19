@@ -27,7 +27,7 @@ class Movie
     #[Assert\NotBlank]
     private ?int $release_year = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 2555, nullable: true)]
     #[Assert\NotBlank]
     private ?string $description = null;
 
@@ -37,9 +37,13 @@ class Movie
     #[ORM\ManyToMany(targetEntity: Actor::class, mappedBy: 'movies')]
     private Collection $actors;
 
+    #[ORM\OneToMany(targetEntity: Comments::class, mappedBy: 'movie')]
+    private Collection $comments;
+
     public function __construct()
     {
         $this->actors = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -117,6 +121,36 @@ class Movie
     {
         if ($this->actors->removeElement($actor)) {
             $actor->removeMovie($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comments>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comments $comment): static
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setMovie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comments $comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getMovie() === $this) {
+                $comment->setMovie(null);
+            }
         }
 
         return $this;

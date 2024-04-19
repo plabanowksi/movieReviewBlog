@@ -2,25 +2,32 @@
 
 namespace App\Controller;
 
+use DateTime;
+use App\Entity\User;
 use App\Entity\Movie;
+use App\Entity\Comments;
 use App\Form\MovieFormType;
+use App\Form\CommentFormType;
+use App\Repository\UserRepository;
 use App\Repository\MovieRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Knp\Component\Pager\PaginatorInterface;
 
 class MoviesController extends AbstractController
 {
     private $em;
     private $movieRepository;
-    public function __construct(EntityManagerInterface $em, MovieRepository $movieRepository) 
+    private $userRepository;
+    public function __construct(EntityManagerInterface $em, MovieRepository $movieRepository, UserRepository $userRepository) 
     {
         $this->em = $em;
         $this->movieRepository = $movieRepository;
+        $this->userRepository = $userRepository;
     }
     #[Route('/', name: '')]
     public function home(Request $request, PaginatorInterface $paginator)
@@ -51,21 +58,44 @@ class MoviesController extends AbstractController
     {
         $movies = $this->movieRepository->findAll();
 
-
         return $this->render('movies/search.html.twig', [
             'movies' => $movies
 
         ]);
     }
-    #[Route('/movies/{id}', methods: ['GET'], name: 'show_movie')]
-    public function show($id): Response
+    #[Route('/movies/{id}', methods: ['GET','POST'], name: 'show_movie')]
+    public function show(int $id, Request $request): Response
     {
         $movie = $this->movieRepository->find($id);
+        $comment = new Comments();
+
+        $user = $this->getUser();
+        $userInfo = $this->userRepository->find($user->getId());
         
+
+        $comment->setAuthor($userInfo->getEmail());
+        $comment->setCreatedAt(new DateTime());
+
+        $commentForm = $this->createForm(CommentFormType::class, $comment);
+        $commentForm->handleRequest($request);
+        
+        if ($commentForm->isSubmitted() && $commentForm->isValid()) {
+            $comment->setAuthor($commentForm->get('author')->getData());
+            $comment->setContent($commentForm->get('content')->getData());
+            $comment->setMovie($movie); 
+    
+            $this->em->persist($comment);
+            $this->em->flush();
+    
+            return $this->redirectToRoute('show_movie', ['id' => $id]);
+        }
+    
         return $this->render('movies/show.html.twig', [
-            'movie' => $movie
+            'movie' => $movie,
+            'commentForm' => $commentForm->createView(),
         ]);
     }
+
     #[Route('/movie/create', name: 'create_movie')]
     public function create(Request $request): Response
     {
@@ -152,13 +182,5 @@ class MoviesController extends AbstractController
         return $this->redirectToRoute('movies');
     }
 
-    #[Route('/movie/{id}/comment', methods: ['GET','POST'], name: 'add_comment')]
-    public function addComment($id): Response
-    {
-        $movie = $this->movieRepository->find($id);
-        
-        return $this->render('movies/addcomment.html.twig', [
-            'movie' => $movie
-        ]);
-    }
+
 }
