@@ -53,7 +53,7 @@
             <div class="row mb-5">
                 <div class="col mt-6">
                     <div class="rounded">
-                        <div class="shadow p-3 w-50">
+                        <div class="shadow p-3">
                             <div class="comment-container d-inline-block pl-3 align-top">
                                 <img class="comment-img rounded-circle icon-img-size" src="{{ asset('images/usericon.png') }}" alt="User Icon">
                                 <span class="commenter-name">{{app.user.email}}</span>
@@ -71,6 +71,21 @@
                         </div>
                     </div>
                 </div>
+                <div class="col mt-6 text-center">
+                    <div class="rounded">
+                        <div class="shadow p-3 w-50 mx-auto">
+                            <h1><b>Rate This Film</b></h1>
+                            <div class="justify-content-center mt-6 film" data-film-id="{{ movie.id }}">
+                                <span class="fa fa-star rate-button checked" data-rating="1"></span>
+                                <span class="fa fa-star rate-button checked" data-rating="2"></span>
+                                <span class="fa fa-star rate-button checked" data-rating="3"></span>
+                                <span class="fa fa-star rate-button" data-rating="4"></span>
+                                <span class="fa fa-star rate-button" data-rating="5"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         {% endif %}
 
@@ -90,9 +105,6 @@
                                     <small class="text-muted">about {{ comment.createdAt|ago }}</small>
                                     <br>
                                     <span class="comment mt-2">{{ comment.content }}</span>
-                                    {% if app.user %}
-                                        <p><a href="#" class="btn btn-info mt-2">Reply</a></p>
-                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -106,6 +118,8 @@
     </div>
 </div>
 
-
+    {% block javascript %}
+        <script src="{{ asset("javascript/rateMovie.js") }}"></script>
+    {% endblock %}
 
 {% endblock %}

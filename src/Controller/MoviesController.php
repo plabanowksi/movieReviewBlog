@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use DateTime;
-use App\Entity\User;
 use App\Entity\Movie;
 use App\Entity\Comments;
+use App\Entity\Rating;
 use App\Form\MovieFormType;
 use App\Form\CommentFormType;
 use App\Repository\UserRepository;
@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class MoviesController extends AbstractController
 {
@@ -182,5 +184,50 @@ class MoviesController extends AbstractController
         return $this->redirectToRoute('movies');
     }
 
+    #[Route('/movie/rateMovie/{id}', methods: ['GET','POST'], name: 'rate_movie')]
+    public function rateMovie(Request $request, $id)
+    {
+        if (!$request->isXmlHttpRequest()) {
+            throw new AccessDeniedException('This endpoint accepts only AJAX requests.');
+        }
+
+        $movie = $this->em->getRepository(Movie::class)->find($id);
+
+        if (!$movie) {
+            return new JsonResponse(['success' => false, 'message' => 'Film not found'], 404);
+        }
+
+        $user = $this->getUser();
+
+        if (!$user) {
+            return new JsonResponse(['success' => false, 'message' => 'User not logged in'], 401);
+        }
+        $ratingValue = $request->request->get('rating');
+        $existingRating = $this->em->getRepository(Rating::class)->findOneBy(['movie' => $movie, 'user' => $user]);
+        
+        if ($existingRating) {
+            $existingRating->setScore($ratingValue);
+        } else {
+            $rating = new Rating();
+            $rating->setMovie($movie);
+            $rating->setScore($ratingValue);
+            $rating->setUser($user);
+            $this->em->persist($rating);
+        }
+
+        $this->em->flush();
+
+        $totalRatings = count($movie->getRating());
+        $sumRatings = array_reduce($movie->getRating()->toArray(), function($carry, $rating) {
+            return $carry + $rating->getScore();
+        }, 0);
+
+        $averageRating = $sumRatings / $totalRatings;
+
+        $movie->setAverageRating($averageRating);
+        $this->em->flush();
+
+        return new JsonResponse(['success' => true, 'message' => 'Film rated successfully']);
+    }
 
 }

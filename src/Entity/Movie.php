@@ -40,10 +40,17 @@ class Movie
     #[ORM\OneToMany(targetEntity: Comments::class, mappedBy: 'movie')]
     private Collection $comments;
 
+    #[ORM\OneToMany(targetEntity: Rating::class, mappedBy: 'movie')]
+    private Collection $rating;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $average_rating = null;
+
     public function __construct()
     {
         $this->actors = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->rating = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -152,6 +159,48 @@ class Movie
                 $comment->setMovie(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Rating>
+     */
+    public function getRating(): Collection
+    {
+        return $this->rating;
+    }
+
+    public function addRating(Rating $rating): static
+    {
+        if (!$this->rating->contains($rating)) {
+            $this->rating->add($rating);
+            $rating->setMovie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRating(Rating $rating): static
+    {
+        if ($this->rating->removeElement($rating)) {
+            // set the owning side to null (unless already changed)
+            if ($rating->getMovie() === $this) {
+                $rating->setMovie(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getAverageRating(): ?float
+    {
+        return $this->average_rating;
+    }
+
+    public function setAverageRating(?float $average_rating): static
+    {
+        $this->average_rating = $average_rating;
 
         return $this;
     }
