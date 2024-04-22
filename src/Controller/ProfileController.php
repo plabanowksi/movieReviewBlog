@@ -3,8 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Comments;
-use App\Entity\User;
 use App\Form\ProfileFormType;
+use App\Repository\CommentsRepository;
+use App\Repository\MovieRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,17 +18,21 @@ class ProfileController extends AbstractController
 {
     private $em;
     private $userRepository;
-    public function __construct(EntityManagerInterface $em, UserRepository $userRepository) 
+    private $movieRepository;
+    private $commentsRepository;
+
+    public function __construct(EntityManagerInterface $em, UserRepository $userRepository, MovieRepository $movieRepository, CommentsRepository $commentsRepository) 
     {
         $this->em = $em;
         $this->userRepository = $userRepository;
+        $this->movieRepository = $movieRepository;
+        $this->commentsRepository = $commentsRepository;
     }
 
     #[Route('/profile', methods:['GET'], name: 'profile')]
     public function index(): Response
     {
         return $this->render('profile/profile.html.twig', [
-            'controller_name' => 'ProfileController',
         ]);
     }
 
@@ -73,4 +78,44 @@ class ProfileController extends AbstractController
             'reviews' => $reviews
         ]);
     }
+
+    #[Route('/adminpanel', methods:['GET'], name: 'adminpanel_adminpanel')]
+    public function adminpanel(): Response
+    {
+
+        return $this->render('adminpanel/adminpanel.html.twig', [
+        ]);
+    }
+
+    #[Route('/adminpanel/deleteedit', methods:['GET'], name: 'deleteedit_adminpanel')]
+    public function deleteedit(): Response
+    {
+        $movies = $this->movieRepository->findAll();
+
+        return $this->render('adminpanel/deleteedit.html.twig', [
+            'movies' => $movies
+        ]);
+    }
+
+    #[Route('/adminpanel/comments', methods:['GET'], name: 'comments_adminpanel')]
+    public function checkcomments(): Response
+    {
+        $reviews = $this->em->getRepository(Comments::class)->findAll();
+
+        return $this->render('adminpanel/comments.html.twig', [
+            'reviews' => $reviews
+        ]);
+    }
+
+    #[Route('/adminpanel/comments/delete/{id}', methods:['GET','DELETE'], name: 'deletecomments_adminpanel')]
+    public function deletecomments(int $id): Response
+    {
+        $comment = $this->commentsRepository->find($id);
+        $this->em->remove($comment);
+        $this->em->flush();
+
+        return $this->redirectToRoute('comments_adminpanel');
+    }
+
+
 }

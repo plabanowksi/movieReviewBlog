@@ -137,7 +137,7 @@ class MoviesController extends AbstractController
         ]);
     }
     #[Route('/movie/edit/{id}', name: 'edit_movie')]
-    public function edit($id, Request $request): Response
+    public function edit(int $id, Request $request): Response
     {
         $movie = $this->movieRepository->find($id);
 
@@ -181,7 +181,7 @@ class MoviesController extends AbstractController
     }
 
     #[Route('/movie/delete/{id}', methods: ['GET','DELETE'], name: 'delete_movie')]
-    public function delete($id): Response
+    public function delete(int $id): Response
     {
         $movie = $this->movieRepository->find($id);
         $this->em->remove($movie);
@@ -191,7 +191,7 @@ class MoviesController extends AbstractController
     }
 
     #[Route('/movie/rateMovie/{id}', methods: ['GET','POST'], name: 'rate_movie')]
-    public function rateMovie(Request $request, $id)
+    public function rateMovie(Request $request, int $id)
     {
         if (!$request->isXmlHttpRequest()) {
             throw new AccessDeniedException('This endpoint accepts only AJAX requests.');

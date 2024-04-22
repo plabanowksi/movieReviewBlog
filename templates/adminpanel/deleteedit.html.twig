@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block body %}
+    <div class="w-4/5 m-auto text-center minh-80">
+        <div class="py-12 border-b border-gray-200 ">
+            <h1 class="text-6xl pt-12 pb-8">
+                Delete / Edit movie
+            </h1>
+        </div>
+        <div class="md:grid lg:grid-cols-3 gap-20 w-4/5 mx-auto py-15" id="resultsList">
+            {% for movie in movies %}
+                <div class="text-center pt-8 pb-4">
+                    <h2 class="text-gray-700 font-bold text-3xl py-2 mb-3">
+                        <a href="/movies/{{ movie.id }}">
+                            {{ movie.title }}
+                        </a>
+                    </h2>
+                {% if app.user %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <a 
+                        href="/movie/edit/{{ movie.id }}"
+                        class="bg-green-500 font-bold py-2 px-4 rounded transition-all hover:bg-green-300">
+                        Edit Movie
+                    </a>
+                    <a 
+                        href="/movie/delete/{{ movie.id }}"
+                        class="bg-red-500 font-bold py-2 px-4 ml-6 rounded transition-all hover:bg-red-300">
+                        Delete Movie
+                    </a>
+                    {% endif %}
+                {% endif %}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+{% endblock %}

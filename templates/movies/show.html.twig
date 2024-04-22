@@ -15,7 +15,13 @@
                 </p>
 
                 <p class="text-sm text-gray-600 font-bold average-rating">
-                Average rating: {{movie.averageRating}} / 5 <br>
+                Average rating: 
+                {% if movie.averageRating|trim %}
+                    {{ movie.averageRating }}
+                    {% else %}
+                    0
+                {% endif %} 
+                / 5 <br>
                 </p>
             </div>
         </div>
@@ -30,24 +36,11 @@
             {{ movie.description }}
         </p>
 
-        {% if app.user %}
-        {# movie.userId == app.user.id  #}
-            <a 
-                href="/movie/edit/{{ movie.id }}"
-                class="bg-green-500 font-bold py-2 px-4 rounded transition-all hover:bg-green-300">
-                Edit Movie
-            </a>
-            <a 
-                href="/movie/delete/{{ movie.id }}"
-                class="bg-red-500 font-bold py-2 px-4 ml-6 rounded transition-all hover:bg-red-300">
-                Delete Movie
-            </a>
-        {% endif %}
     </div>
 
 <div class="row">
     <div class="col mt-2">
-        <h3><i class="pr-3 fas fa-comment"></i>{{ movie.comments|length }} Comments</h3>
+        <h3><i class="pr-3 fas fa-comment pl-8"></i>{{ movie.comments|length }} Comments</h3>
         <hr>
         {% if app.user %}
             <div class="row mb-5">

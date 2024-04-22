@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block body %}
+    <div class="w-4/5 m-auto text-center minh-80">
+        <div class="py-12 border-b border-gray-200 ">
+            <h1 class="text-6xl pt-12 pb-8">
+                Check / Delete comments
+            </h1>
+        </div>
+
+        {% for review in reviews %}
+        <div class="row mb-3">
+            <div class="col">
+                <div class="rounded">
+                    <div class="shadow p-3 w-50">
+                        <div class="row">
+                            <div class="col">
+                                <div class="comment-container d-inline-block pl-3 align-top">
+                                    <span class="commenter-name">{{ review.author }}</span>
+                                    <small class="text-muted">about {{ review.createdAt|ago }}</small>
+                                    <br>
+                                    <span class="comment mt-2">Comment: {{ review.content }}</span><br><br>
+                                    <span class="comment mt-2"><a href="/movies/{{ review.movie.id }}">{{ review.movie.title }}</a></span>
+                                </div>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <a 
+                                        href="/adminpanel/comments/delete/{{ review.id }}"
+                                        class="bg-red-500 font-bold py-2 px-4 ml-6 rounded transition-all hover:bg-red-300">
+                                        Delete comment
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        {% endfor %}
+    </div>
+{% endblock %}

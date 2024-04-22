@@ -20,7 +20,7 @@ class MovieFixtures extends Fixture
         $movie->setImagePath('https://upload.wikimedia.org/wikipedia/en/b/b4/Spider-Man-_Across_the_Spider-Verse_poster.jpg');
         // $movie->addActor($this->getReference('actor_1'));
         // $movie->addActor($this->getReference('actor_2'));
-        $createdAt = new \DateTimeImmutable();
+        $createdAt = new \DateTime();
 
         $comment1 = new Comments();
         $comment1->setAuthor('Paweł Ł.');
