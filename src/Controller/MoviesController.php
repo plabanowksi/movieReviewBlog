@@ -73,7 +73,7 @@ class MoviesController extends AbstractController
 
         $user = $this->getUser();
         if ($user) {
-            $userInfo = $this->userRepository->find($user->getId());
+            $userInfo = $this->userRepository->find($user);
             $comment->setAuthor($userInfo->getEmail());
             $comment->setCreatedAt(new DateTime());
         }
@@ -81,10 +81,15 @@ class MoviesController extends AbstractController
         $commentForm = $this->createForm(CommentFormType::class, $comment);
         $commentForm->handleRequest($request);
         
+        
+        $existingRating = $this->em->getRepository(Rating::class)->findOneBy(['movie' => $movie, 'user' => $user]);
+
         if ($commentForm->isSubmitted() && $commentForm->isValid()) {
             $comment->setAuthor($commentForm->get('author')->getData());
             $comment->setContent($commentForm->get('content')->getData());
-            $comment->setMovie($movie); 
+            $comment->setMovie($movie);
+            $comment->setUser($user);
+
     
             $this->em->persist($comment);
             $this->em->flush();
@@ -95,6 +100,7 @@ class MoviesController extends AbstractController
         return $this->render('movies/show.html.twig', [
             'movie' => $movie,
             'commentForm' => $commentForm->createView(),
+            'existingRating' => $existingRating
         ]);
     }
 
@@ -227,7 +233,7 @@ class MoviesController extends AbstractController
         $movie->setAverageRating($averageRating);
         $this->em->flush();
 
-        return new JsonResponse(['success' => true, 'message' => 'Film rated successfully']);
+        return new JsonResponse(['success' => true, 'message' => 'Film rated successfully', 'averageRating' => $averageRating]);
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Comments;
 use App\Entity\User;
 use App\Form\ProfileFormType;
 use App\Repository\UserRepository;
@@ -22,7 +23,7 @@ class ProfileController extends AbstractController
         $this->userRepository = $userRepository;
     }
 
-    #[Route('/profile', methods:['GET','POST'], name: 'profile')]
+    #[Route('/profile', methods:['GET'], name: 'profile')]
     public function index(): Response
     {
         return $this->render('profile/profile.html.twig', [
@@ -34,7 +35,7 @@ class ProfileController extends AbstractController
     public function edit(Request $request, UserPasswordHasherInterface $userPasswordHasher): Response
     {
         $user = $this->getUser();
-        $userInfo = $this->userRepository->find($user->getId());
+        $userInfo = $this->userRepository->find($user);
         $profileForm = $this->createForm(ProfileFormType::class, $user);
         $profileForm->handleRequest($request);
 
@@ -54,32 +55,22 @@ class ProfileController extends AbstractController
         }
 
         return $this->render('profile/edit.html.twig', [
-            'controller_name' => 'ProfileController',
             'userInfo' => $userInfo,
             'profileForm' => $profileForm,
 
         ]);
+    }
+
+    #[Route('/profile/myreviews', methods:['GET'], name: 'myreviews_profile')]
+    public function myreviews(): Response
+    {
+        $user = $this->getUser();
+        $reviews = $this->em->getRepository(Comments::class)->findBy(['user' => $user]);
 
 
-
-
-        // if ($form->isSubmitted() && $form->isValid()) {
-        //     // encode the plain password
-        //     $user->setPassword(
-        //             $userPasswordHasher->hashPassword(
-        //             $user,
-        //             $form->get('plainPassword')->getData()
-        //         )
-        //     );
-
-        //     $em->persist($user);
-        //     $em->flush();
-
-        //     // do anything else you need here, like send an email
-
-        //     return $this->redirectToRoute('movies');
-        // }
-
-
+        return $this->render('profile/myreviews.html.twig', [
+            'user' => $user,
+            'reviews' => $reviews
+        ]);
     }
 }

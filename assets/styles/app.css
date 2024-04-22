@@ -57,6 +57,6 @@ textarea .comment-form{
     color: #FFFF00;
 }
 
-.fa-star .checked {
+.fa-star.checked {
     color: orange;
-  }
+}
