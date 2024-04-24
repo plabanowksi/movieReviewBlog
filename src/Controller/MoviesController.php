@@ -8,6 +8,7 @@ use App\Entity\Comments;
 use App\Entity\Rating;
 use App\Form\MovieFormType;
 use App\Form\CommentFormType;
+use App\Repository\CategoriesRepository;
 use App\Repository\UserRepository;
 use App\Repository\MovieRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,11 +26,14 @@ class MoviesController extends AbstractController
     private $em;
     private $movieRepository;
     private $userRepository;
-    public function __construct(EntityManagerInterface $em, MovieRepository $movieRepository, UserRepository $userRepository) 
+    private $categoriesRepository;
+
+    public function __construct(EntityManagerInterface $em, MovieRepository $movieRepository, UserRepository $userRepository, CategoriesRepository $categoriesRepository) 
     {
         $this->em = $em;
         $this->movieRepository = $movieRepository;
         $this->userRepository = $userRepository;
+        $this->categoriesRepository = $categoriesRepository;
     }
     #[Route('/', name: '')]
     public function home(Request $request, PaginatorInterface $paginator)
@@ -59,9 +63,11 @@ class MoviesController extends AbstractController
     public function search(): Response
     {
         $movies = $this->movieRepository->findAll();
+        $categories = $this->categoriesRepository->findAll();
 
         return $this->render('movies/search.html.twig', [
-            'movies' => $movies
+            'movies' => $movies,
+            'categoriesSelect' => $categories
 
         ]);
     }

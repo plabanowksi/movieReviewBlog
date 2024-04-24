@@ -10,6 +10,30 @@
 
         <div class="py-10 text-center">
             <div class="inline-block sm:pt-1">
+            
+                <p class="text-sm text-gray-600 font-bold average-rating">
+                Categories:
+                </p><br>
+
+                    <div class="row">
+                        {% if movie.categories|length > 0 %}
+                            <div class="row">
+                                {% for category in movie.categories %}
+                                    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <p class="card-link">{{ category.name }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p>No categories found.</p>
+                        {% endif %}
+                    </div>
+                    <br>
+
                 <p class="text-sm text-gray-600">
                 Release Year: {{movie.releaseYear}} <br>
                 </p>
@@ -79,7 +103,7 @@
                     </div>
                 </div>
 
-                <input type="hidden" id="existingRating" value="{{ existingRating.score }}">
+                <input type="hidden" id="existingRating" value="{{ existingRating ? existingRating.score : '' }}">
             </div>
         {% endif %}
 

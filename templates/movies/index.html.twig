@@ -36,7 +36,7 @@
         <!-- Review Item -->
         {% for movie in pagination %}
             <div class="text-center pt-8 pb-4">
-                <h2 class="text-gray-700 font-bold text-3xl py-2" style="min-height: 100px;">
+                <h2 class="card-title text-gray-700 font-bold text-3xl py-2" style="min-height: 80px;">
                     {{ movie.title }}
                 </h2>
                 
@@ -50,13 +50,13 @@
                 </div>
 
 
-                <p class="text-base text-gray-700 pt-4 pb-10 leading-8 font-light overflow-hidden h-60 mb-10">
-                    {{ movie.description }}
-                </p>
+            <p class="card-description text-base text-gray-700 pt-4 pb-10 leading-8 font-light overflow-hidden h-60 mb-10 min-vh-30">
+                {{ movie.description }}
+            </p>
 
-                <a href="/movies/{{ movie.id }}" class="uppercase border border-gray-500 text-gray-600 text-lg py-4 px-12 rounded transition transition-all hover:bg-gray-800 hover:text-white">
-                    Keep Reading
-                </a>
+            <a href="/movies/{{ movie.id }}" class="btn btn-outline-dark uppercasetext-lg py-4 px-12 rounded">
+                Keep Reading
+            </a>
             </div>
         {% endfor %}
 

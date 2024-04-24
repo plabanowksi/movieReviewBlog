@@ -46,11 +46,15 @@ class Movie
     #[ORM\Column(nullable: true)]
     private ?float $average_rating = null;
 
+    #[ORM\ManyToMany(targetEntity: Categories::class, inversedBy: 'movies')]
+    private Collection $categories;
+
     public function __construct()
     {
         $this->actors = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->rating = new ArrayCollection();
+        $this->categories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -201,6 +205,30 @@ class Movie
     public function setAverageRating(?float $average_rating): static
     {
         $this->average_rating = $average_rating;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Categories>
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Categories $category): static
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Categories $category): static
+    {
+        $this->categories->removeElement($category);
 
         return $this;
     }

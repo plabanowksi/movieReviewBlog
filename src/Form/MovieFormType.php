@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use App\Entity\Categories;
 
 class MovieFormType extends AbstractType
 {
@@ -51,6 +52,23 @@ class MovieFormType extends AbstractType
                 ),
                 'label' => false
             ])
+            ->add('categories', EntityType::class, [
+                'label' => 'Categories:',
+                'class' => Categories::class,
+                'attr'=> array(
+                    'class' => 'form-select select2',
+                    'id' => 'multiple-select-field',
+                    'data-placeholder' => "Choose anything"
+                ),
+                'label_attr' => [
+                    'class' => 'display-6 mb-2', 
+                ],
+                'choice_label' => 'name',
+                'multiple' => true,
+                'required' => false,
+            ]);
+
+
 //             ->add('actors', EntityType::class, [
 //                 'class' => Actor::class,
 // 'choice_label' => 'id',

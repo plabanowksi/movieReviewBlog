@@ -3,54 +3,65 @@
 {% block title %} Movies search {% endblock %}
 
 {% block body %}
-    <div class="w-4/5 m-auto text-center" >
-        <div class="py-12 border-b border-gray-200">
-            <h1 class="text-6xl pt-12 pb-8">
-                Movies search
-            </h1>
-
-        </div>
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <form class="d-flex">
-                        <input class="form-control me-2 py-4 px-6 border-gray-500 w-50" type="search" placeholder="Search" aria-label="Search" id="searchInput">
-                        <button class="uppercase border border-gray-500 text-lg py-1 px-2 rounded transition transition-all bg-gray-800 text-white hover:bg-white hover:text-gray-800" type="button" id="searchButton">Search</button>
-                        <button class="uppercase border border-gray-500 text-lg py-1 px-2 rounded transition transition-all bg-gray-800 text-white hover:bg-white hover:text-gray-800" type="button" id="clearButton">Clear</button>
-                    </form>
-                </div>
-            </div>
+<div class="w-4/5 m-auto text-center" >
+    <div class="py-12 border-b border-gray-200">
+        <h1 class="text-6xl pt-12 pb-8">
+            Movies search
+        </h1>
     </div>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form class="d-flex">
+                <input class="form-control me-2 py-4 px-6 border-gray-500 w-50" type="search" placeholder="Search" aria-label="Search" id="searchInput">
+                <div class="m-2">
+                        Categories:
+                </div>
+                <select class="form-select me-2 py-4 px-6 border-gray-500" multiple id="categorySelect">
+                     {% for category in categoriesSelect %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 
     
-    <div class="md:grid lg:grid-cols-3 gap-20 w-4/5 mx-auto py-15" id="resultsList">
-        <!-- Review Item -->
-        {% for movie in movies %}
-            <div class="text-center pt-8 pb-4">
-                <h2 class="text-gray-700 font-bold text-3xl py-2">
-                    {{ movie.title }}
-                </h2>
-                
-                <div style="text-align: -webkit-center;">
-                    <img
-                        src="{{ movie.imagePath }}"
-                        alt=""
-                        class="shadow-xl rounded-md img-fluid max-width-100 max-height-100"
-                        style="max-width: 400px; max-height: 400px;"
-                    />
-                </div>
+<div class="md:grid lg:grid-cols-3 gap-20 w-4/5 mx-auto py-15 minh-80" id="resultsList">
+    <!-- Review Item -->
+    {% for movie in movies %}
+        <div class="cards text-center pt-8 pb-4" data-categories="{% for category in movie.categories %}{{ category.name|lower }}{% if not loop.last %},{% endif %}{% endfor %}">
+            <h2 class="card-title text-gray-700 font-bold text-3xl py-2" style="min-height: 80px;">
+                {{ movie.title }}
+            </h2>
 
-                <p class="text-base text-gray-700 pt-4 pb-10 leading-8 font-light overflow-hidden h-60 mb-10">
-                    {{ movie.description }}
-                </p>
-
-                <a href="/movies/{{ movie.id }}" class="uppercase border border-gray-500 text-gray-600 text-lg py-4 px-12 rounded transition transition-all hover:bg-gray-800 hover:text-white">
-                    Keep Reading
-                </a>
+            <div class="mb-1" style="min-height: 80px;">
+            {% for category in movie.categories %}
+                <span class="badge bg-primary mt-1">{{ category.name }}</span>
+            {% endfor %}
             </div>
-        {% endfor %}
+            
+            <div style="text-align: -webkit-center;">
+                <img
+                    src="{{ movie.imagePath }}"
+                    alt=""
+                    class="shadow-xl rounded-md img-fluid max-width-100 max-height-100"
+                    style="max-width: 400px; max-height: 400px;"
+                />
+            </div>
 
-    </div>
+            <p class="card-description text-base text-gray-700 pt-4 pb-10 leading-8 font-light overflow-hidden h-60 mb-10 min-vh-30">
+                {{ movie.description }}
+            </p>
+
+            <a href="/movies/{{ movie.id }}" class="btn btn-outline-dark uppercasetext-lg py-4 px-12 rounded">
+                Keep Reading
+            </a>
+        </div>
+    {% endfor %}
+</div>
 
 
     {% block javascript %}

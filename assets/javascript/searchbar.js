@@ -1,29 +1,26 @@
-const searchInput = document.getElementById('searchInput');
-const searchButton = document.getElementById('searchButton');
-const clearButton = document.getElementById('clearButton');
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const categorySelect = document.getElementById('categorySelect');
 
-document.getElementById('searchButton').addEventListener('click', function () {
-    var input = document.getElementById('searchInput').value.toLowerCase();
-    var items = document.querySelectorAll('#resultsList div');
-    items.forEach(function(item) {
-        if (item.textContent.toLowerCase().includes(input)) {
-            item.style.display = 'block';
-        } else {
-            item.style.display = 'none';
-        }
-    });
+    $(categorySelect).select2();
+    $(categorySelect).siblings('.select2-container').find('.select2-selection').addClass('js-example-basic-multiple js-states form-control');
+
+    // Define a function to filter movies
+    function filterFilms() {
+        const searchText = searchInput.value.trim().toLowerCase();
+        const selectedCategories = $(categorySelect).select2('data').map(option => option.text.toLowerCase());
+
+        const films = document.querySelectorAll('.cards');
+        films.forEach(film => {
+            const title = film.querySelector('.card-title').textContent.toLowerCase();
+            const categories = film.dataset.categories.toLowerCase().split(',');
+            const isVisible = (!searchText || title.includes(searchText)) &&
+                              (!selectedCategories.length || selectedCategories.every(category => categories.includes(category)));
+            film.style.display = isVisible ? 'block' : 'none';
+        });
+    }
+
+    // Trigger filtering when the search input or category select dropdown changes
+    searchInput.addEventListener('input', filterFilms);
+    $(categorySelect).on('change', filterFilms);
 });
-
-function clearSearchResults() {
-    var items = document.querySelectorAll('#resultsList div');
-    items.forEach(function(item) {
-        item.style.display = 'block';
-    });
-}
-
-document.getElementById('clearButton').addEventListener('click', function() {
-    document.getElementById('searchInput').value = '';
-    clearSearchResults();
-});
-
-console.log('searchjs');

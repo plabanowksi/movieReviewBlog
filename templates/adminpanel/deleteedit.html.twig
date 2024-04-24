@@ -12,7 +12,7 @@
         <div class="md:grid lg:grid-cols-3 gap-20 w-4/5 mx-auto py-15" id="resultsList">
             {% for movie in movies %}
                 <div class="text-center pt-8 pb-4">
-                    <h2 class="text-gray-700 font-bold text-3xl py-2 mb-3">
+                    <h2 class="card-title text-gray-700 font-bold text-3xl py-2" style="min-height: 100px;">
                         <a href="/movies/{{ movie.id }}">
                             {{ movie.title }}
                         </a>
@@ -21,12 +21,12 @@
                     {% if is_granted('ROLE_ADMIN') %}
                     <a 
                         href="/movie/edit/{{ movie.id }}"
-                        class="bg-green-500 font-bold py-2 px-4 rounded transition-all hover:bg-green-300">
+                        class="btn btn-outline-dark uppercasetext-lg rounded ml-6 rounded">
                         Edit Movie
                     </a>
                     <a 
                         href="/movie/delete/{{ movie.id }}"
-                        class="bg-red-500 font-bold py-2 px-4 ml-6 rounded transition-all hover:bg-red-300">
+                        class="btn btn-outline-dark uppercasetext-lg rounded ml-6 rounded">
                         Delete Movie
                     </a>
                     {% endif %}
