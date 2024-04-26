@@ -91,8 +91,9 @@ textarea .comment-form{
 
 
 #sidebar {
-    width: 200px; /* Adjust width as needed */
+    width: 400px; /* Adjust width as needed */
     background-color: #f4f4f4; /* Add desired background color */
+    padding: 20px;
 }
 #content {
     flex-grow: 1;

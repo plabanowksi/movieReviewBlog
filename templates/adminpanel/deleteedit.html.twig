@@ -20,12 +20,12 @@
                 {% if app.user %}
                     {% if is_granted('ROLE_ADMIN') %}
                     <a 
-                        href="/movie/edit/{{ movie.id }}"
+                        href="/admin/movie/edit/{{ movie.id }}"
                         class="btn btn-outline-dark uppercasetext-lg rounded ml-6 rounded">
                         Edit Movie
                     </a>
                     <a 
-                        href="/movie/delete/{{ movie.id }}"
+                        href="/admin/movie/delete/{{ movie.id }}"
                         class="btn btn-outline-dark uppercasetext-lg rounded ml-6 rounded">
                         Delete Movie
                     </a>

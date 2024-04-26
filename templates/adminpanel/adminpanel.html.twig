@@ -3,25 +3,44 @@
 {% block title %}Admin Panel{% endblock %}
 
 {% block body %}
-    <div class="w-4/5 m-auto text-center minh-80">
-        <div class="py-12 border-b border-gray-200 ">
-            <h1 class="text-6xl pt-12 pb-8">
-                Admin Panel
-            </h1>
+    <div class="w-4/5 minh-80">
+        <div class="py-12">
         </div>
 
-            <div class="">
-                <ul class=" lg:pt-0 list-reset items-center text-5xl">
-                    <li class="mr-3">
-                        <a class="inline-block text-black-300 no-underline hover:text-gray-400 hover:text-underline py-2 px-4" href="/movie/create" @click="isOpen = false">Create movie</a>
-                    </li>
-                    <li class="mr-3 mt-4">
-                        <a class="inline-block text-black-300 no-underline hover:text-gray-400 hover:text-underline py-2 px-4" href="/adminpanel/deleteedit" @click="isOpen = false">Delete / Edit movie</a>
-                    </li>
-                    <li class="mr-3 mt-4">
-                        <a class="inline-block text-black-300 no-underline hover:text-gray-400 hover:text-underline py-2 px-4" href="/adminpanel/comments" @click="isOpen = false">Check / Delete comments</a>
-                    </li>
-                <ul>
+        <div class="flex">
+
+            <div id="sidebar" >
+                <ul class=" lg:pt-0 list-reset items-left text-2xl">
+                    <li><a href="/admin/users/view">User Management</a></li>
+                    <li><a href="#" onclick="toggleSubmenu('contentSubMenu')">Content Management</a></li>
+                    <ul id="contentSubMenu" class="submenu">
+                        <li>-<a href="/admin/movie/view">Add/Edit/Remove Movies</a></li>
+                        <li>-<a href="/admin/categories/view">Add/Edit/Remove Categories</a></li>
+                        <li>-<a href="/admin/comments/view">Manage Comments</a></li>
+                    </ul>
+
+                    <li><a href="#" onclick="toggleSubmenu('analyticsSubMenu')">Analytics (in progress)</a></li>
+                    {# <ul id="analyticsSubMenu" class="submenu">
+                        <li>-Track User Activity</li>
+                        <li>-Monitor Popular Movies</li>
+                        <li>-Generate Reports</li>
+                    </ul> #}
+
+                    <li><a href="#" onclick="toggleSubmenu('customizationSubMenu')">Backups</a></li>
+                    <ul id="customizationSubMenu" class="submenu active">
+                        <li>- <a href="/admin/backup/create">Create a backup</a></li>
+                        <li>- <a href="/admin/backup/restore">Restore a backup</a></li>
+                    </ul>
+                </ul>
             </div>
+        </div>
     </div>
+
+    <script>
+        // Function to toggle submenu visibility
+        function toggleSubmenu(submenuId) {
+            var submenu = document.getElementById(submenuId);
+            submenu.classList.toggle("active");
+        }
+    </script>
 {% endblock %}

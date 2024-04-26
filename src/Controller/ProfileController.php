@@ -87,35 +87,5 @@ class ProfileController extends AbstractController
         ]);
     }
 
-    #[Route('/adminpanel/deleteedit', methods:['GET'], name: 'deleteedit_adminpanel')]
-    public function deleteedit(): Response
-    {
-        $movies = $this->movieRepository->findAll();
-
-        return $this->render('adminpanel/deleteedit.html.twig', [
-            'movies' => $movies
-        ]);
-    }
-
-    #[Route('/adminpanel/comments', methods:['GET'], name: 'comments_adminpanel')]
-    public function checkcomments(): Response
-    {
-        $reviews = $this->em->getRepository(Comments::class)->findAll();
-
-        return $this->render('adminpanel/comments.html.twig', [
-            'reviews' => $reviews
-        ]);
-    }
-
-    #[Route('/adminpanel/comments/delete/{id}', methods:['GET','DELETE'], name: 'deletecomments_adminpanel')]
-    public function deletecomments(int $id): Response
-    {
-        $comment = $this->commentsRepository->find($id);
-        $this->em->remove($comment);
-        $this->em->flush();
-
-        return $this->redirectToRoute('comments_adminpanel');
-    }
-
 
 }

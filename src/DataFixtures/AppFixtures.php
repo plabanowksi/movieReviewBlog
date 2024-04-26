@@ -204,6 +204,27 @@ class AppFixtures extends Fixture
         $movie2->setDescription('Scientist Bruce Banner is living in the shadows, scouring the planet for an antidote. But the warmongers who dream of abusing his powers wont leave him alone. Our brilliant doctor is pursued by the abomination, a nightmarish beast of pure adrenaline and aggression whose powers match the Hulks own, and a fight of comic book proportions ensues, threatening New York City with total destruction.');
         $movie2->setImagePath('https://m.media-amazon.com/images/S/pv-target-images/669b0142c944b1a961fb698592082971d09c5bc3a1d67128ab5084c6d45edda6.jpg');
 
+        $movie3 = new Movie();
+        $movie3->setTitle('The Dark Knight');
+        $movie3->setReleaseYear(2008);
+        $movie3->setDescription('The Dark Knight - the seventh feature film about the adventures of Batman, the second (after Batman: The Beginning) directed by Christopher Nolan. It had its world premiere on July 18, 2008 (Poland: August 8). It set a U.S. opening record with $158.4 million. The film was nominated in eight categories for the 2008 Academy Awards and received two statuettes: for supporting actor (Heath Ledger) and for best sound editing.');
+        $movie3->setImagePath('/uploads/66282bd4ed0a6.jpg');
+
+        $tagNamesTab2 = ['action hero','epic','famous line'];
+        $categoriesMovie1tab2 = [];
+        foreach ($tagNamesTab2 as $tagName) {
+            $categorieForMovie = $this->em->getRepository(Categories::class)->findOneBy(['name' => $tagName]);
+            if (!$categorieForMovie) {
+                $categorieForMovie = new Categories();
+                $categorieForMovie->setName($tagName);
+                $manager->persist($categorieForMovie);
+            }
+            $categoriesMovie1tab2[] = $categorieForMovie;
+        }
+        foreach ($categoriesMovie1tab2 as $categorieForMovie2) {
+            $movie3->addCategory($categorieForMovie2);
+        }
+        
         $createdAt = new \DateTime();
 
         $user = new User();
@@ -245,6 +266,7 @@ class AppFixtures extends Fixture
 
     $manager->persist($movie);
     $manager->persist($movie2);
+    $manager->persist($movie3);
     $manager->persist($user);
     $manager->persist($user2);
     $manager->persist($comment1);

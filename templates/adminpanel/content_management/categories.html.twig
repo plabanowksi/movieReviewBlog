@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block body %}
+    <div class="minh-80">
+        <div class="py-20">
+            <div class="d-flex text-center">
+                <div class="mx-auto w-4/5 my-8">
+                    {% if app.user %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                                <a 
+                                href="/admin/categories/create" 
+                                class="uppercase border border-gray-500 text-gray-600 text-lg py-4 px-12 rounded transition transition-all hover:bg-gray-800 hover:text-white mr-5">
+                                Create New categorie
+                                </a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+            <table class="table text-center">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for categorie in categories %}
+                        <tr>
+                            <td> {{ loop.index }}</td>
+                            <td>{{ categorie.name  }}</td>
+                            <td>
+                                {% if app.user %}
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                    <a 
+                                        href="/admin/categories/edit/{{ categorie.id }}"
+                                        class="btn btn-outline-dark">
+                                        Edit categorie
+                                    </a>
+                                    <a 
+                                        href="/admin/categories/delete/{{ categorie.id }}"
+                                        class="btn btn-outline-dark">
+                                        Delete categorie
+                                    </a>
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% block javascript %}
+
+    {% endblock %}
+{% endblock %}

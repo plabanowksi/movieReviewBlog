@@ -1,0 +1,35 @@
+{% extends "./base.html.twig" %}
+
+{% block title %}Edit Movie {% endblock %}
+
+{% block body %}
+<div class="w-4/5 m-auto pt-40">
+    <h1 class="text-6xl text-center pb-12">
+        Edit Movie
+    </h1>
+
+    {{ form_start(form) }}
+
+        {{ form_widget(form) }}
+        
+        <button    
+            type="submit"
+            class="btn btn-outline-dark uppercasetext-lg py-4 px-12 rounded mt-2">
+            Submit Post
+        </button>
+
+    {{ form_end(form) }}
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('.select2').select2();
+        $('.select2')
+            .siblings('.select2-container')
+            .find('.select2-selection')
+            .addClass('js-example-basic-multiple js-states form-control');
+
+    });
+
+</script>
+{% endblock %}

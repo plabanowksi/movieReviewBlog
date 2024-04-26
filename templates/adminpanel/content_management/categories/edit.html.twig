@@ -1,0 +1,23 @@
+{% extends "./base.html.twig" %}
+
+{% block title %}Edit Categorie {% endblock %}
+
+{% block body %}
+<div class="w-4/5 m-auto pt-40 minh-80">
+    <h1 class="text-6xl text-center pb-12">
+        Edit Categorie
+    </h1>
+
+    {{ form_start(categorieForm) }}
+
+        {{ form_widget(categorieForm) }}
+        <button    
+            type="submit"
+            class="btn btn-outline-dark uppercasetext-lg py-4 px-12 rounded mt-2">
+            Submit Post
+        </button>
+
+    {{ form_end(categorieForm) }}
+</div>
+
+{% endblock %}

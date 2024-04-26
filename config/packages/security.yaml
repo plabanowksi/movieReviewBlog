@@ -39,9 +39,7 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/movie/create, roles: ROLE_ADMIN}
-        - { path: ^/movie/edit, roles: ROLE_ADMIN}
-        - { path: ^/movie/delete, roles: ROLE_ADMIN}
+        - { path: ^/admin, roles: ROLE_ADMIN}
         - { path: ^/adminpanel, roles: ROLE_ADMIN}
         - { path: ^/profile, roles: ROLE_USER}
         - { path: ^/movie/rateMovie, roles: ROLE_USER}
