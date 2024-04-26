@@ -101,7 +101,11 @@ To get a local copy up and running follow these simple example steps.
 4.  Create new database:
     You can do it by localhost/phpmyadmin in XAMPP <br>
     I prefer using DBeaver for it, all u have to do is turn on your XAMPP and create new connection + create new database <br>
-    After creating new database, set name 'db_movies' or what ever you like, but then change database name in '.env' (DATABASE_URL and in DATABASE_NAME)
+    After creating new database, set name 'db_movies' or what ever you like, but then change database name in '.env' (DATABASE_URL and in DATABASE_NAME)<br>
+    Now we can execute command that will fill our database with basic data
+    ```
+    symfony console doctrine:fixtures:load --no-interaction
+    ```
 5. Install NPM packages:
     ```
     npm install
