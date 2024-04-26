@@ -7,18 +7,17 @@
 <h3 align="center">Movie Review Blog</h3>
 
   <p align="center">
-    This application allows:<br />
-        guests:<br />
-        -register/log in<br />
-        -send an email using the form in the CONTACT tab<br />
+    This application allows: <br />
+        guests: <br />
+        -register/log in <br />
+        -send an email using the form in the CONTACT tab <br />
         user:<br />
-        -the same as a guest<br />
-        -comment/add a rating to a movie<br />
-        -editing account information<br />
+        -the same as a guest <br />
+        -comment/add a rating to a movie <br />
+        -editing account information <br />
         admin :<br />
         -the same as guest and user<br />
-        -operations on movies (CRUD)<br />
-        -deleting comments under movies<br />
+        -admin panel (User Management, Content Management, Analytics, Backups) <br />
     <br />
     <a href="https://github.com/plabanowksi/movieReviewBlog"><strong>Explore the docs »</strong></a>
     <br />
@@ -50,6 +49,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
+<p align="left">Main page looks like this. After login in you can comment and rate movies.</p>
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
@@ -74,15 +74,19 @@ To get a local copy up and running follow these simple example steps.
 
 ### Installation
 
-1. Clone the repo
+1. Clone the repo:
    ```sh
    git clone https://github.com/plabanowksi/movieReviewBlog.git
    ```
-2. Download and install composer
+2. Download and install composer:
     ```
     https://getcomposer.org/
     ```
-3. Download XAMPP 8.2.12
+    Command for installation
+    ```
+    composer install
+    ```
+3. Download XAMPP 8.2.12 and create new database:
     ```
     https://www.apachefriends.org/pl/download.html    
     ```
@@ -94,18 +98,22 @@ To get a local copy up and running follow these simple example steps.
         extension=pdo_mysql
         extension=zip
     ```
-3. Install NPM packages
-   ```
-   npm install
-   ```
-4. Open new terminal in project dir (u can use GIT) and start project:
-  ```
-  symfony server start
-  ```
-5. Open new terminal in project dir and use one of following commands:
-  ```
-  npm run dev / npm run
-  ```
+4.  Create new database:
+    You can do it by localhost/phpmyadmin in XAMPP <br>
+    I prefer using DBeaver for it, all u have to do is turn on your XAMPP and create new connection + create new database <br>
+    After creating new database, set name 'db_movies' or what ever you like, but then change database name in '.env' (DATABASE_URL and in DATABASE_NAME)
+5. Install NPM packages:
+    ```
+    npm install
+    ```
+6. Open new terminal in project dir and use one of following commands:
+    ```
+    npm run dev / npm run
+    ```
+7. Open new terminal in project dir (u can use GIT) and start project:
+    ```
+    symfony server:start
+    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
