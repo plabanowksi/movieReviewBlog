@@ -52,8 +52,15 @@ class ContactController extends AbstractController
                 <p>We will respond and try to help as fast as possible.</p>
                 <p>This message was generated automatically by MovieTeam.</p>');
 
-            $dsn = 'gmail+smtp://email@gmail.com:password@default';
+            //uncomment $dsn and set email and password for mailer
+            // $dsn = 'gmail+smtp://email@gmail.com:password@default'; 
 
+            $dsn = false;
+            if($dsn == false){
+            $this->addFlash('warring','Dsn address is empty!');
+            return $this->redirectToRoute('contact');
+
+            }
             $transport = Transport::fromDsn($dsn);
             $mailer = new Mailer($transport);
             $mailer->send($email);

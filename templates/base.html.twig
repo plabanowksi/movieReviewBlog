@@ -94,18 +94,12 @@
             {% endfor %}
 
             {% for message in app.flashes('warring') %}
-                <div class="alert alert-warring alert-dismissible text-center text-3xl" role="alert">
+                <div class="alert alert-danger alert-dismissible text-center text-3xl" role="alert">
                     {{ message }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             {% endfor %}
 
-            {% for message in app.flashes('warring') %}
-                <div class="alert alert-warring alert-dismissible text-center text-3xl" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endfor %}
             {% block body %}{% endblock %}
 
             {% block footer %}
