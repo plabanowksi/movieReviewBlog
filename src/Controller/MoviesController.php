@@ -99,6 +99,7 @@ class MoviesController extends AbstractController
     
             $this->em->persist($comment);
             $this->em->flush();
+            $this->addFlash('success','Comment added sucessfully');
     
             return $this->redirectToRoute('show_movie', ['id' => $id]);
         }

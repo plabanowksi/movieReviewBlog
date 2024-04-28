@@ -83,6 +83,29 @@
                 </header>
             {% endblock %}
 
+                <div class="py-11" role="alert">
+                </div>
+
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success alert-dismissible text-center text-3xl" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+
+            {% for message in app.flashes('warring') %}
+                <div class="alert alert-warring alert-dismissible text-center text-3xl" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+
+            {% for message in app.flashes('warring') %}
+                <div class="alert alert-warring alert-dismissible text-center text-3xl" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
             {% block body %}{% endblock %}
 
             {% block footer %}

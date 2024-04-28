@@ -75,6 +75,8 @@ class ContentManagementController extends AbstractController
             $this->em->persist($newMovie);
             $this->em->flush();
 
+            $this->addFlash('success','Movie created sucessfully');
+            
             return $this->redirectToRoute('movies');
         }
 
@@ -108,7 +110,6 @@ class ContentManagementController extends AbstractController
         
                         $movie->setImagePath('/uploads/' . $newFileName);
                         $this->em->flush();
-                        return $this->redirectToRoute('movies');
                     }
                 }
             }else{
@@ -117,8 +118,10 @@ class ContentManagementController extends AbstractController
                 $movie->setDescription($form->get('description')->getData());
 
                 $this->em->flush();
-                return $this->redirectToRoute('movies');
             }
+            $this->addFlash('success','Movie edited sucessfully');
+            return $this->redirectToRoute('movies');
+
         }
         return $this->render('adminpanel/content_management/movies/edit.html.twig',[
             'movie' => $movie,
@@ -133,6 +136,7 @@ class ContentManagementController extends AbstractController
         $this->em->remove($movie);
         $this->em->flush();
 
+        $this->addFlash('success','Movie deleted sucessfully');
         return $this->redirectToRoute('movies');
     }
 
@@ -152,6 +156,7 @@ class ContentManagementController extends AbstractController
         $comment = $this->commentsRepository->find($id);
         $this->em->remove($comment);
         $this->em->flush();
+        $this->addFlash('success','Comment deleted sucessfully');
 
         return $this->redirectToRoute('comments_adminpanel');
     }
@@ -179,6 +184,7 @@ class ContentManagementController extends AbstractController
             $this->em->persist($categorie);
             $this->em->flush();
 
+            $this->addFlash('success','Category created sucessfully');
             return $this->redirectToRoute('categories_adminpanel');
         }
 
@@ -197,6 +203,7 @@ class ContentManagementController extends AbstractController
                 $categorie->setName($categorieForm->get('name')->getData());
 
                 $this->em->flush();
+                $this->addFlash('success','Category edited sucessfully');
                 return $this->redirectToRoute('categories_adminpanel');
         }
         return $this->render('adminpanel/content_management/categories/edit.html.twig', [
@@ -211,7 +218,8 @@ class ContentManagementController extends AbstractController
         $categorie = $this->categoriesRepository->find($id);
         $this->em->remove($categorie);
         $this->em->flush();
-
+        
+        $this->addFlash('success','Category deleted sucessfully');
         return $this->redirectToRoute('categories_adminpanel');
     }
 

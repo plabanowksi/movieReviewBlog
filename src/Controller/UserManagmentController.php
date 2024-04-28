@@ -48,12 +48,15 @@ class UserManagmentController extends AbstractController
 
         $this->em->flush();
 
+        $this->addFlash('success','User updated success');
+
         return $this->redirectToRoute('admin_user_view');
     }
 
     #[Route('/admin/users/roles&permissions', name: 'admin_roles&permissions')]
     public function manageRoles(int $id): Response
     {
+        // $this->addFlash('success','User updated success');
         return $this->render('adminpanel/user_managment/usersview.html.twig', [
         ]);
     }
@@ -64,6 +67,8 @@ class UserManagmentController extends AbstractController
         $user = $this->userRepository->find($id);
         $this->em->remove($user);
         $this->em->flush();
+
+        $this->addFlash('success','User delete - success');
 
         return $this->redirectToRoute('admin_user_view');
     }
