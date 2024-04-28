@@ -56,7 +56,7 @@ class ProfileController extends AbstractController
                 $userInfo->setSurename($profileForm->get('surename')->getData());
 
                 $this->em->flush();
-                $this->addFlash('success','Profile edited sucessfully');
+                $this->addFlash('success','Profile edited successfully');
                 return $this->redirectToRoute('edit_profile');
         }
 

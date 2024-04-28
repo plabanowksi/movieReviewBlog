@@ -58,7 +58,7 @@ class ContactController extends AbstractController
             $mailer = new Mailer($transport);
             $mailer->send($email);
 
-            $this->addFlash('success','Email send - sucess');
+            $this->addFlash('success','Email sended successfully');
         }
 
         return $this->render('menu/contact.html.twig',[
