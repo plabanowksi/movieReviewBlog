@@ -100,7 +100,7 @@ To get a local copy up and running follow these simple example steps.
     ```
 4.  Create new database:
     You can do it by localhost/phpmyadmin in XAMPP <br>
-    I prefer using DBeaver for it, all u have to do is turn on your XAMPP and create new connection + create new database <br>
+    I prefer using DBeaver for it, all you have to do is turn on your XAMPP and create new connection + create new database <br>
     After creating new database, set name 'db_movies' or what ever you like, but then change database name in '.env' (DATABASE_URL and in DATABASE_NAME)<br>
     Now we can execute command that will fill our database with basic data
     ```
@@ -118,7 +118,10 @@ To get a local copy up and running follow these simple example steps.
     ```
     symfony server:start
     ```
-
+8. If you want to have working mailer with gmail find and replace:
+    ```
+    email@gmail.com:password
+    ```
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- LICENSE -->

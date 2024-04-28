@@ -52,7 +52,7 @@ class ContactController extends AbstractController
                 <p>We will respond and try to help as fast as possible.</p>
                 <p>This message was generated automatically by MovieTeam.</p>');
 
-            $dsn = 'gmail+smtp://randomsendemailmailer@gmail.com:jainrpqwcpxefeqd@default';
+            $dsn = 'gmail+smtp://email@gmail.com:password@default';
 
             $transport = Transport::fromDsn($dsn);
             $mailer = new Mailer($transport);
