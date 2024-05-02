@@ -2,160 +2,96 @@
 
 namespace App\Controller;
 
+
 use App\Entity\Movie;
 use App\Entity\Comments;
 use App\Entity\Categories;
 use App\Form\MovieFormType;
 use App\Form\CategoriesFormType;
-use App\Repository\UserRepository;
 use App\Repository\MovieRepository;
-use App\Repository\CommentsRepository;
 use App\Repository\CategoriesRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Service\ContentManagementService;
+use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class ContentManagementController extends AbstractController
 {
-    
-    
     private $em;
-    private $movieRepository;
-    private $userRepository;
+    private $cmService;
     private $categoriesRepository;
-    private $commentsRepository;
+    private $movieRepository;
 
-
-    public function __construct(EntityManagerInterface $em, MovieRepository $movieRepository, UserRepository $userRepository, CategoriesRepository $categoriesRepository, CommentsRepository $commentsRepository) 
+    public function __construct(ContentManagementService $cmService, EntityManagerInterface $em, CategoriesRepository $categoriesRepository, MovieRepository $movieRepository) 
     {
         $this->em = $em;
-        $this->movieRepository = $movieRepository;
-        $this->userRepository = $userRepository;
+        $this->cmService = $cmService;
         $this->categoriesRepository = $categoriesRepository;
-        $this->commentsRepository = $commentsRepository;
+        $this->movieRepository = $movieRepository;
     }
 
-
-    #[Route('/admin/movie/view', name: 'app_content_management')]
+    #[Route('/admin/movie/view', methods:['GET','POST'], name: 'app_content_management')]
     public function view(): Response
     {
-        $movies = $this->movieRepository->findAll();
-
         return $this->render('adminpanel/content_management/movies.html.twig', [
-            'movies' => $movies
+            'movies' => $this->cmService->viewMovies()
         ]);
     }
 
-    
-    #[Route('/admin/movie/create', name: 'create_movie')]
+    #[Route('/admin/movie/create', methods:['GET','POST'], name: 'create_movie')]
     public function create(Request $request): Response
     {
         $movie = new Movie();
         $form = $this->createForm(MovieFormType::class, $movie);
-
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
-            $newMovie  = $form->getData();
-            $imagePath = $form->get('image_path')->getData();
-            if($imagePath){
-                $newFileName = uniqid() . '.' . $imagePath->guessExtension();
-                try{
-                    $imagePath->move(
-                        $this->getParameter('kernel.project_dir') . '/public/uploads', $newFileName
-                    );
-                }catch(FileException $e){
-                    return new Response($e->getMessage());
-                }
 
-                $newMovie->setImagePath('/uploads/' . $newFileName);
-            }
-            $this->em->persist($newMovie);
-            $this->em->flush();
-
+        if($this->cmService->createMovie($form))
             $this->addFlash('success','Movie created successfully');
-            
-            return $this->redirectToRoute('movies');
-        }
 
         return $this->render('adminpanel/content_management/movies/create.html.twig', [
-            'form' => $form->createView()
+            'contactForm' => $this->createForm(MovieFormType::class)->createView(),
         ]);
     }
-    #[Route('/admin/movie/edit/{id}',methods:['GET','POST'], name: 'edit_movie')]
+
+    #[Route('/admin/movie/edit/{id}', methods:['GET','POST'], name: 'edit_movie')]
     public function edit(int $id, Request $request): Response
     {
         $movie = $this->movieRepository->find($id);
-
         $form = $this->createForm(MovieFormType::class, $movie);
-
         $form->handleRequest($request);
-        $imagePath = $form->get('image_path')->getData();
-        if($form->isSubmitted() && $form->isValid()){
-            if($imagePath){
-                if($movie->getImagePath() !== null){
-                    if(file_exists($this->getParameter('kernel.project_dir') . $movie->getImagePath()) == false){
-                        $this->getParameter('kernel.project_dir') . $movie->getImagePath();
-
-                        $newFileName = uniqid() . '.' . $imagePath->guessExtension();
-                        try{
-                            $imagePath->move(
-                                $this->getParameter('kernel.project_dir') . '/public/uploads', $newFileName
-                            );
-                        }catch(FileException $e){
-                            return new Response($e->getMessage());
-                        }
-        
-                        $movie->setImagePath('/uploads/' . $newFileName);
-                        $this->em->flush();
-                    }
-                }
-            }else{
-                $movie->setTitle($form->get('title')->getData());
-                $movie->setReleaseYear($form->get('release_year')->getData());
-                $movie->setDescription($form->get('description')->getData());
-
-                $this->em->flush();
-            }
+        if($this->cmService->editMovie($form, $movie))
             $this->addFlash('success','Movie edited successfully');
-            return $this->redirectToRoute('movies');
 
-        }
         return $this->render('adminpanel/content_management/movies/edit.html.twig',[
             'movie' => $movie,
-            'form' => $form
+            'form' => $form,
         ]);
     }
 
     #[Route('/admin/movie/delete/{id}', methods: ['GET','DELETE'], name: 'delete_movie')]
     public function delete(int $id): Response
     {
-        $movie = $this->movieRepository->find($id);
-        $this->em->remove($movie);
-        $this->em->flush();
+        if($this->cmService->deleteMovie($id))
+            $this->addFlash('success','Movie deleted successfully');
 
-        $this->addFlash('success','Movie deleted successfully');
         return $this->redirectToRoute('movies');
     }
 
     #[Route('/admin/comments/view', methods:['GET'], name: 'comments_adminpanel')]
     public function checkcomments(): Response
     {
-        $reviews = $this->em->getRepository(Comments::class)->findAll();
-
         return $this->render('adminpanel/content_management/comments.html.twig', [
-            'reviews' => $reviews
+            'reviews' => $this->em->getRepository(Comments::class)->findAll()
         ]);
     }
 
     #[Route('/admin/comments/delete/{id}', methods:['GET','DELETE'], name: 'deletecomments_adminpanel')]
     public function deletecomments(int $id): Response
     {
-        $comment = $this->commentsRepository->find($id);
-        $this->em->remove($comment);
-        $this->em->flush();
+        $this->cmService->deleteComments($id);
         $this->addFlash('success','Comment deleted successfully');
 
         return $this->redirectToRoute('comments_adminpanel');
@@ -164,10 +100,8 @@ class ContentManagementController extends AbstractController
     #[Route('/admin/categories/view', methods:['GET'], name: 'categories_adminpanel')]
     public function categoriesView(): Response
     {
-        $categories = $this->em->getRepository(Categories::class)->findAll();
-
         return $this->render('adminpanel/content_management/categories.html.twig', [
-            'categories' => $categories
+            'categories' => $this->em->getRepository(Categories::class)->findAll()
         ]);
     }
 
@@ -178,34 +112,22 @@ class ContentManagementController extends AbstractController
         $categorieForm = $this->createForm(CategoriesFormType::class, $categorie);
 
         $categorieForm->handleRequest($request);
-        if($categorieForm->isSubmitted() && $categorieForm->isValid()){
-            $categorie  = $categorieForm->getData();
-
-            $this->em->persist($categorie);
-            $this->em->flush();
-
+        if($this->cmService->createCategorie($categorieForm))
             $this->addFlash('success','Category created successfully');
-            return $this->redirectToRoute('categories_adminpanel');
-        }
 
         return $this->render('adminpanel/content_management/categories/create.html.twig', [
-            'categorieForm' => $categorieForm
+            'categorieForm' => $this->createForm(CategoriesFormType::class)->createView()
         ]);
     }
+
     #[Route('/admin/categories/edit/{id}', methods:['GET','POST'], name: 'categoriesedit_adminpanel')]
     public function categoriesEdit(int $id, Request $request): Response
     {
-        $categorie = $this->em->getRepository(Categories::class)->find($id);
+        $categorie = $this->categoriesRepository->find($id);
         $categorieForm = $this->createForm(CategoriesFormType::class, $categorie);
         $categorieForm->handleRequest($request);
+        $this->cmService->editCategorie($categorieForm, $categorie);
 
-        if($categorieForm->isSubmitted() && $categorieForm->isValid()){
-                $categorie->setName($categorieForm->get('name')->getData());
-
-                $this->em->flush();
-                $this->addFlash('success','Category edited successfully');
-                return $this->redirectToRoute('categories_adminpanel');
-        }
         return $this->render('adminpanel/content_management/categories/edit.html.twig', [
             'categorie' => $categorie,
             'categorieForm' => $categorieForm
@@ -215,11 +137,9 @@ class ContentManagementController extends AbstractController
     #[Route('/admin/categories/delete/{id}', methods: ['GET','DELETE'], name: 'delete_categories')]
     public function deleteCategorie(int $id): Response
     {
-        $categorie = $this->categoriesRepository->find($id);
-        $this->em->remove($categorie);
-        $this->em->flush();
-        
-        $this->addFlash('success','Category deleted successfully');
+        if($this->cmService->deleteCategorie($id))
+            $this->addFlash('success','Category deleted successfully');
+
         return $this->redirectToRoute('categories_adminpanel');
     }
 

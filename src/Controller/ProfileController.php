@@ -4,8 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Comments;
 use App\Form\ProfileFormType;
-use App\Repository\CommentsRepository;
-use App\Repository\MovieRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,15 +16,11 @@ class ProfileController extends AbstractController
 {
     private $em;
     private $userRepository;
-    private $movieRepository;
-    private $commentsRepository;
 
-    public function __construct(EntityManagerInterface $em, UserRepository $userRepository, MovieRepository $movieRepository, CommentsRepository $commentsRepository) 
+    public function __construct(EntityManagerInterface $em, UserRepository $userRepository) 
     {
         $this->em = $em;
         $this->userRepository = $userRepository;
-        $this->movieRepository = $movieRepository;
-        $this->commentsRepository = $commentsRepository;
     }
 
     #[Route('/profile', methods:['GET'], name: 'profile')]
@@ -44,20 +38,20 @@ class ProfileController extends AbstractController
         $profileForm = $this->createForm(ProfileFormType::class, $user);
         $profileForm->handleRequest($request);
 
-        if($profileForm->isSubmitted() && $profileForm->isValid()){
-                $userInfo->setEmail($profileForm->get('email')->getData());
-                $userInfo->setPassword(
-                    $userPasswordHasher->hashPassword(
-                    $userInfo,
-                    $profileForm->get('password')->getData()
-                    )
-                );
-                $userInfo->setName($profileForm->get('name')->getData());
-                $userInfo->setSurename($profileForm->get('surename')->getData());
-
-                $this->em->flush();
-                $this->addFlash('success','Profile edited successfully');
-                return $this->redirectToRoute('edit_profile');
+        if (($profileForm->isSubmitted() && $profileForm->isValid())) { 
+            $userInfo->setEmail($profileForm->get('email')->getData());
+            $userInfo->setPassword(
+                $userPasswordHasher->hashPassword(
+                $userInfo,
+                $profileForm->get('password')->getData()
+                )
+            );
+            $userInfo->setName($profileForm->get('name')->getData());
+            $userInfo->setSurename($profileForm->get('surename')->getData());
+    
+            $this->em->flush();
+            $this->addFlash('success','Profile edited successfully');
+            return $this->redirectToRoute('edit_profile');
         }
 
         return $this->render('profile/edit.html.twig', [
